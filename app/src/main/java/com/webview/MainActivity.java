@@ -1,5 +1,6 @@
 package com.webview;
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,17 +10,37 @@ import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.github.ybq.android.spinkit.style.DoubleBounce;
+
 public class MainActivity extends AppCompatActivity {
+
+    private Dialog dialog;
+    private DoubleBounce doubleBounce;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initActivity();
+
+    }
+
+    private void initActivity() {
         String url = "https://www.uxmatters.com/";
         WebView webView = findViewById(R.id.webView);
         WebSettings webSettings = webView.getSettings();
+        dialog = new Dialog(this, R.style.myDialogStyle);
+        dialog.setContentView(R.layout.dialog);
+        progressBar = dialog.findViewById(R.id.spin_kit);
+        doubleBounce = new DoubleBounce();
+        progressBar.setIndeterminateDrawable(doubleBounce);
+        dialog.show();
+
+        showDilog();
 
         //set webview customized client
         webView.setWebViewClient(new MyWebViewClient());
@@ -51,12 +72,22 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(MainActivity.this, "Progress is " + newProgress, Toast.LENGTH_SHORT).show();
+                        if (newProgress == 100)
+                            dissmisDilog();
                     }
                 });
                 super.onProgressChanged(view, newProgress);
 
             }
         });
+    }
+
+    public void showDilog(){
+        progressBar.setIndeterminate(true);
+        progressBar.setIndeterminateDrawable(doubleBounce);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+    public void dissmisDilog(){
+        dialog.dismiss();
     }
 }
