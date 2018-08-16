@@ -1,8 +1,11 @@
 package com.webview;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -12,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        String url = "https://www.varzesh3.com/";
+        String url = "https://www.uxmatters.com/";
         WebView webView = findViewById(R.id.webView);
         WebSettings webSettings = webView.getSettings();
 
@@ -32,6 +35,13 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setUseWideViewPort(true);
         //zoom out if the content with is greater than the width of the view port
         webSettings.setLoadWithOverviewMode(true);
+
+        webView.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
+
+        if (Build.VERSION.SDK_INT >= 19) webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        else webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 
 
     }
